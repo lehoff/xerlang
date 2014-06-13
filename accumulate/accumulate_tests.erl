@@ -1,4 +1,4 @@
--module(accumulate_test).
+-module(accumulate_tests).
 -import(accumulate, [accumulate/2]).
 -include_lib("eunit/include/eunit.hrl").
 
