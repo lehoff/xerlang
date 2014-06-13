@@ -1,4 +1,4 @@
--module(trinary_test).
+-module(trinary_tests).
 -import(example, [to_decimal/1]).
 -include_lib("eunit/include/eunit.hrl").
 

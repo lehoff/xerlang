@@ -5,28 +5,28 @@ check_assignment () {
     intest="$1"
     inexample="${intest%/*}/example.erl"
     testfn=${intest##*/}
-    assignment=${testfn%_test.erl}
+    assignment=${testfn%_tests.erl}
     workdir=$(mktemp -d "${tmp}${assignment}.XXXXXXXXXX")
-    modname=$(awk '/^-module/ { sub(/.*\(\s*/, ""); sub(/\s*\).*$/, ""); print }' "${inexample}")
+    modname=$(awk '/^-module/ { sub(/.*\([[:space:]]*/, ""); sub(/[[:space:]]*\).*$/, ""); print }' "${inexample}")
     cp "${inexample}" "${workdir}/${modname}.erl"
     cp "${intest}" "${workdir}/${testfn}"
     (
         cd "${workdir}"
         erl -make && erl -noshell -eval \
-            "init:stop(case ${assignment}_test:test() of ok -> 0; _ -> 1 end)."
+            "init:stop(case ${assignment}_tests:test() of ok -> 0; _ -> 1 end)."
     )
     status=$?
     rm -rf "${workdir}"
     return $status
 }
 failures=()
-for fn in */*_test.erl; do
+for fn in */*_tests.erl; do
     (check_assignment "${fn}")
     if [ $? -ne 0 ]; then
         echo "check failed"
         testfn=${fn##*/}
-        assignment=${testfn%_test.erl}
-        failures=(${failures[@]} "${testfn%_test.erl}")
+        assignment=${testfn%_tests.erl}
+        failures=(${failures[@]} "${testfn%_tests.erl}")
     fi
 done
 if [ "${#failures[*]}" -eq "0" ]; then

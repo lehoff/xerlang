@@ -1,4 +1,4 @@
--module(rna_transcription_test).
+-module(rna_transcription_tests).
 -include_lib("eunit/include/eunit.hrl").
 
 transcribes_cytidine_unchanged_test() ->
